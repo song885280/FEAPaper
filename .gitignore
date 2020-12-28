@@ -1,3 +1,9 @@
 
 *.json
 /W2V/Data/
+*.xlsx
+*.docx
+*.csv
+*.model
+*.xml
+*.bin
