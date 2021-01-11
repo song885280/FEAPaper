@@ -56,7 +56,7 @@ if __name__ == "__main__":
     print('开始转换...')
     start = time.process_time()
     model = Word2Vec(LineSentence(procPath),
-                     size=100,  # 词向量长度为400
+                     size=50,  # 词向量长度为400
                      window=3,
                      min_count=3,
                      workers=multiprocessing.cpu_count(),
