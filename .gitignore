@@ -7,3 +7,5 @@
 *.model
 *.xml
 *.bin
+/build/
+*.exe
