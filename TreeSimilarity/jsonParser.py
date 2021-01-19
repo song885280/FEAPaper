@@ -53,8 +53,6 @@ def get_nodes(relations):
 				this_level = this_level + dict_1[item]
 			except KeyError:
 				pass
-			except TypeError:
-				print(item)
 		if this_level:
 			nodes.append(this_level)
 

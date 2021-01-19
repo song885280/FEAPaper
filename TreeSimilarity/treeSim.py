@@ -84,7 +84,7 @@ class Node:
 
 class MultiTree(Tree):
 
-	def __init__(self, Tree_1: object, Tree_2: object, alpha: int, Method) -> object:
+	def __init__(self, Tree_1: object, Tree_2: object, alpha: int) -> object:
 		"""
 
         :param Tree_1: 树1
@@ -94,7 +94,6 @@ class MultiTree(Tree):
 		self.alpha = alpha  # 阻尼因子
 		self.Tree_1 = Tree_1
 		self.Tree_2 = Tree_2
-		self.Method = Method
 
 		Nodes = merge(self.Tree_1.nodes, self.Tree_2.nodes)
 		Relations = merge_relations(self.Tree_1.all_Relations, self.Tree_2.all_Relations)
@@ -104,23 +103,18 @@ class MultiTree(Tree):
 		print("Initialize the weight dict...")
 
 		for node in tqdm(self.AllNodes.keys()):
-			if Method == "1":
-				level = self.AllNodes[node]["Level"]
-				word_list = self.Tree_1.Levels[level] + self.Tree_2.Levels[level]
-				self.Weight_dict[node] = Compare.syn(node, word_list)
-			else:
-				self.Weight_dict[node] = 0
-
-		print("节点权重")
-		for nodes in self.Weight_dict:
-			print(nodes, self.Weight_dict[nodes])
+			level = self.AllNodes[node]["Level"]
+			word_list = self.Tree_1.Levels[level] + self.Tree_2.Levels[level]
+			self.Weight_dict[node] = Compare.syn(node, word_list)
+		# self.Weight_dict[node] = 1
+		print(self.Weight_dict)
+		print("Finished.")
 
 
 class MultiNode(Node, MultiTree):
 
 	def __init__(self, MultiTree, node_name):
 		alpha = MultiTree.alpha
-		Method = MultiTree.Method
 		node = Node(MultiTree, node_name)
 		self.Position = node.Position
 		self.Weight = 0
@@ -132,10 +126,8 @@ class MultiNode(Node, MultiTree):
 			if node.Concept in self.nodes_1 and node.Concept in self.nodes_2:
 				self.Weight = 1
 			else:
-				if Method == "1":
-					self.Weight = MultiTree.Weight_dict[node.Concept]
-				else:
-					self.Weight = 0  # 不使用word2vec
+				# self.Weight = 0
+				self.Weight = MultiTree.Weight_dict[node.Concept]
 
 		if self.Position == "root":
 			beta = len(node.Children)
@@ -149,10 +141,8 @@ class MultiNode(Node, MultiTree):
 			if node.Concept in self.nodes_1 and node.Concept in self.nodes_2:
 				delta = 1
 			else:
-				if Method == "1":
-					delta = MultiTree.Weight_dict[node.Concept]
-				else:
-					delta = 0  # 不使用word2vec
+				# delta = 0
+				delta = MultiTree.Weight_dict[node.Concept]
 			beta = len(node.Children)
 			Sum = 0
 			for Item in node.Children:
@@ -197,10 +187,10 @@ def get_vectors(nodes: list) -> object:
 
 if __name__ == '__main__':
 
-	Tree_1 = bulid_tree("experiment/蒸汽回转干燥机支撑系统_疲劳分析.json")
-	Tree_2 = bulid_tree("experiment/吸附器KJT20S.10000_疲劳强度分析.json")
+	Tree_1 = bulid_tree("experiment/1筒体应力分析.json")
+	Tree_2 = bulid_tree("experiment/2法兰应力应变分析.json")
 
-	multi = MultiTree(Tree_1, Tree_2, math.e, "1")
+	multi = MultiTree(Tree_1, Tree_2, math.e)
 	Data = []
 	Similarity = 0
 	for item in multi.AllNodes.keys():

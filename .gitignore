@@ -9,7 +9,10 @@
 *.bin
 /build/
 *.exe
+<<<<<<< HEAD
 /案例建立/案例源文件/
 *.png
 *.svg
 *.qrc
+=======
+>>>>>>> parent of 814a29e... bug fix

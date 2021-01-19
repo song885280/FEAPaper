@@ -16,12 +16,12 @@ def similarwords(word):
 
 
 test_pair = [["有限元分析", "有限元"], ["有限元分析", "分析"],
-             ["应力分析", "强度评定"], ["应力分析", "应力"],
+             ["应力分析", "强度分析"], ["应力分析", "应力"],
              ["压力", "内压"], ["压力", "外压"], ["压力", "温度"]]
 for [i, j] in test_pair:
 	print(word2vec_model.wv.similarity(i, j))
 
-word_list = ["应力分析", "应力评定"]
+word_list = ["应力分析", "应力分类"]
 
 for word in word_list:
 	similarwords(word)
