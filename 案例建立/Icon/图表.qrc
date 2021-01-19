@@ -1,8 +1,0 @@
-<RCC>
-  <qresource prefix="加">
-    <file>加.png</file>
-    <file>减.png</file>
-    <file>加.svg</file>
-    <file>减.svg</file>
-  </qresource>
-</RCC>
