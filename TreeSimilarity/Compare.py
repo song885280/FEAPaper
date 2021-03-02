@@ -20,7 +20,7 @@ def syn(node, node_list):  # 使用word2vec比较一个元组中两个词的相�
 		try:
 			sim = model.wv.similarity(pair[0], pair[1])
 			if 0.5 < sim < 0.99:
-				print(pair[0],pair[1])
+				# print(pair[0],pair[1])
 				result += sim
 				i += 1
 			else:

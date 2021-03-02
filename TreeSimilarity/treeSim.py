@@ -111,9 +111,12 @@ class MultiTree(Tree):
 			else:
 				self.Weight_dict[node] = 0
 
+
+"""
 		print("节点权重")
 		for nodes in self.Weight_dict:
 			print(nodes, self.Weight_dict[nodes])
+"""
 
 
 class MultiNode(Node, MultiTree):
@@ -192,7 +195,8 @@ def get_vectors(nodes: list) -> object:
     :param nodes:
     """
 
-	print(nodes)
+
+# print(nodes)
 
 
 if __name__ == '__main__':

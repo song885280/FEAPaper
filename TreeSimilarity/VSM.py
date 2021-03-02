@@ -59,11 +59,11 @@ def cosDis(V1, V2):
 	return np.dot(V1, V2) / d
 
 
-if __name__ == "__main__":
-	Tree1 = "experiment/压力容器.json"
-	Tree2 = "experiment/压力容器_2.json"
+def VSIm(case_1,case_2):
+	Tree1 = case_1
+	Tree2 = case_2
 	L1, L2, allNode = iniVectorSpace(Tree1, Tree2)
 	vector_1 = booleanW(L1, allNode)
 	vector_2 = booleanW(L2, allNode)
 	S = cosDis(vector_1, vector_2)
-	print(S)
+	return  S
