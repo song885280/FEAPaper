@@ -4,20 +4,23 @@
 # @File ：Experiment.py
 # @IDE ：PyCharm
 
-import treeSim as ts
-import pandas
-import math
 import VSM
+import math
 import os
-import sys
+import pandas
+from tqdm import tqdm
+
+import treeSim as ts
+
+All_simPairs = []
 
 
-def GetFileList(Dir):
-	files = []
-	for root, dirs, files in os.walk(Dir):
+def GetFileList(dir):
+	file_list = []
+	for root, dirs, files in os.walk(dir):
 		for file in files:
-			files.append(os.path.join(root, file))
-	return files
+			file_list.append(os.path.join(root, file))
+	return file_list
 
 
 def Comp(case_1, case_2, mod):
@@ -41,20 +44,85 @@ def Comp(case_1, case_2, mod):
 		if Position == "root":
 			Similarity = Weight
 		Data.append([Name, Weight, Position])
+	# 提取近义词对
+	Pairs = multi.simPairs
+	simPairs_2 = []
+	for item in Pairs:
+		if item not in simPairs_2:
+			if [item[1], item[0]] not in simPairs_2:
+				simPairs_2.append(item)
+
 	table = pandas.DataFrame(Data, columns=["None", "Weight", "Position"])
-	return table, "{0:.3f}".format(Similarity)
+	return table, "{0:.3f}".format(Similarity), simPairs_2
 
 
-if __name__ == '__main__':
+def innerType(TypeName):
+	"""
+	比较同类案例的平均相似度
+	:param TypeName: 类别名
+	"""
 	All_data = []
-	file_list = GetFileList("json")
-	for i in range(0, len(file_list)):
-		for j in range(i, len(file_list)):
+	file_list = GetFileList(TypeName)
+	for i in tqdm(range(0, len(file_list))):
+		for j in range(i + 1, len(file_list)):
 			case_1 = file_list[i]
 			case_2 = file_list[j]
 			sim_w2v = Comp(file_list[i], file_list[j], "1")[1]
 			sim = Comp(file_list[i], file_list[j], "0")[1]
+			simPairs = Comp(file_list[i], file_list[j], "1")[2]
 			sim_vsm = VSM.VSIm(case_1, case_2)
-			All_data.append([case_1, case_2, sim_w2v, sim, sim_vsm])
-	result = pandas.DataFrame(All_data, columns=["案例1", "案例2", "sim_w2v", "sim", "sim_vsm"])
-	result.to_csv("结果.csv", encoding="gbk")
+			All_data.append([case_1, case_2, sim_w2v, simPairs, sim, sim_vsm])
+			All_simPairs.extend(simPairs)
+	simPairsTable = pandas.DataFrame(All_simPairs, columns=["1", "2"])
+	simPairsTable.to_csv("关键词对", encoding="gbk")
+	result = pandas.DataFrame(All_data, columns=["案例1", "案例2", "sim_w2v", "simPairs", "sim", "sim_vsm"])
+	result.to_csv("results/" + TypeName + "_results.csv", encoding="gbk")
+
+
+def TypeSide(TypeA, TypeB):
+	"""
+	比较不同类型的案例之间的相似度
+	:param TypeA:
+	:param TypeB:
+	"""
+	All_data = []
+	FolderA = TypeA
+	FolderB = TypeB
+	file_listA = GetFileList("src/" + FolderA)
+	file_listB = GetFileList("src/" + FolderB)
+	for i in tqdm(range(0, len(file_listA))):
+		for j in range(0, len(file_listB)):
+			case_1 = file_listA[i]
+			case_2 = file_listB[j]
+			sim_w2v = Comp(case_1, case_2, "1")[1]
+			sim = Comp(case_1, case_2, "0")[1]
+			simPairs = Comp(case_1, case_2, "1")[2]
+			sim_vsm = VSM.VSIm(case_1, case_2)
+			All_data.append([case_1, case_2, sim_w2v, simPairs, sim, sim_vsm])
+
+	result = pandas.DataFrame(All_data, columns=["案例1", "案例2", "sim_w2v", "simPairs", "sim", "sim_vsm"])
+	result.to_csv("results/" + FolderA + "_" + FolderB + "_results.csv", encoding="gbk")
+
+
+def TypeEX():
+	"""
+	比较类别之间的相似度
+	:rtype: object
+	"""
+	FoldersA = ["储罐", "塔釜", "反应器", "管道", "零部件"]
+	FoldersB = ["疲劳分析", "应力分析", "热分析", "结构分析"]
+
+	for i in FoldersA:
+		for j in FoldersA:
+			if i != j:
+				TypeSide(i, j)
+
+	for i in FoldersB:
+		for j in FoldersB:
+			if i != j:
+				TypeSide(i, j)
+
+
+if __name__ == '__main__':
+	innerType("json")
+	print("Finished")

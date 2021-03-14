@@ -11,6 +11,13 @@ from mainWindow import *
 from MaterialView import Material
 
 
+def fullFill(text):
+	if text == "":
+		return "none"
+	else:
+		return text
+
+
 class MyWindow(QMainWindow, Ui_MainWindow):
 
 	def __init__(self, parent=None):
@@ -40,23 +47,25 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 		"""
 		建立案例
         """
-		CaseName = self.CaseName.toPlainText()
+		AnalyseObject = fullFill(self.analyseObject.currentText())
 
-		Usage = self.Usage.toPlainText()
+		CaseName = fullFill(self.CaseName.toPlainText())
 
-		Standard = self.Standard.toPlainText()
+		Usage = fullFill(self.Usage.toPlainText())
 
-		analyseType = self.analyseType.toPlainText()
+		Standard = fullFill(self.Standard.toPlainText())
 
-		productPara = self.ProductPara.toPlainText()
+		analyseType = fullFill(self.analyseType.toPlainText())
 
-		enviPara = self.EnviPara.toPlainText()
+		productPara = fullFill(self.ProductPara.toPlainText())
 
-		Condition = self.Condition.toPlainText()
+		enviPara = fullFill(self.EnviPara.toPlainText())
 
-		Load = self.Load.toPlainText()
+		Condition = fullFill(self.Condition.toPlainText())
 
-		Position = self.Position.toPlainText()
+		Load = fullFill(self.Load.toPlainText())
+
+		Position = fullFill(self.Position.toPlainText())
 
 		if CaseName == "" or analyseType == "":
 			QMessageBox.information(self, "错误",
@@ -74,10 +83,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 				try:
 					MaterialName = self.MaterialTable.item(rows_index, 0).text()
 					MaterialPara = self.MaterialTable.item(rows_index, 1).text()
-					MaterialInfo[MaterialName] = Separate(MaterialPara)
+					MaterialInfo[MaterialName] = Separate(fullFill(MaterialPara))
 				except AttributeError:
 					MaterialName = self.MaterialTable.item(rows_index, 0).text()
-					MaterialPara = [""]
+					MaterialPara = ["none"]
 					MaterialInfo[MaterialName] = Separate(MaterialPara)
 
 			FEAcase = {"分析案例":
@@ -88,7 +97,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 				             "计算参数": [WorkingInfo]}]}
 
 			Filename = CaseName + "_" + analyseType
-			SaveJson(FEAcase, Filename)
+
+			SaveJson(AnalyseObject, FEAcase, Filename)
+
 			QMessageBox.information(self, "成功",
 			                        "\"%s\" 案例已成功生成" % CaseName)
 
@@ -127,8 +138,8 @@ def Separate(Text):
 		return [Text]
 
 
-def SaveJson(data, fileName):
-	with open("JsonFiles/" + fileName + ".json", 'w', encoding="utf-8") as f:
+def SaveJson(Obj, data, fileName):
+	with open("JsonFiles/" + Obj + "/" + fileName + ".json", 'w', encoding="utf-8") as f:
 		json.dump(data, f, ensure_ascii=False)
 
 

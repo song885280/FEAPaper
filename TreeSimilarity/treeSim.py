@@ -95,19 +95,22 @@ class MultiTree(Tree):
 		self.Tree_1 = Tree_1
 		self.Tree_2 = Tree_2
 		self.Method = Method
-
+		self.simPairs = []
 		Nodes = merge(self.Tree_1.nodes, self.Tree_2.nodes)
 		Relations = merge_relations(self.Tree_1.all_Relations, self.Tree_2.all_Relations)
 
 		self.AllNodes = Tree({"NODES": Nodes, "RELATIONS": Relations}).AllNodes
 		self.Weight_dict = {}
-		print("Initialize the weight dict...")
+		# print("Initialize the weight dict...")
 
-		for node in tqdm(self.AllNodes.keys()):
+		for node in self.AllNodes.keys():
 			if Method == "1":
 				level = self.AllNodes[node]["Level"]
 				word_list = self.Tree_1.Levels[level] + self.Tree_2.Levels[level]
-				self.Weight_dict[node] = Compare.syn(node, word_list)
+				self.Weight_dict[node] = Compare.syn(node, word_list)[0]
+				simPairs = Compare.syn(node, word_list)[1]
+				if simPairs != 0:
+					self.simPairs += Compare.syn(node, word_list)[1]
 			else:
 				self.Weight_dict[node] = 0
 
@@ -201,10 +204,11 @@ def get_vectors(nodes: list) -> object:
 
 if __name__ == '__main__':
 
-	Tree_1 = bulid_tree("experiment/蒸汽回转干燥机支撑系统_疲劳分析.json")
-	Tree_2 = bulid_tree("experiment/吸附器KJT20S.10000_疲劳强度分析.json")
+	Tree_1 = bulid_tree("json/蒸汽回转干燥机支撑系统_疲劳分析.json")
+	Tree_2 = bulid_tree("json/吸附器KJT20S.10000_疲劳强度分析.json")
 
 	multi = MultiTree(Tree_1, Tree_2, math.e, "1")
+	simPairs = multi.simPairs
 	Data = []
 	Similarity = 0
 	for item in multi.AllNodes.keys():
@@ -215,6 +219,12 @@ if __name__ == '__main__':
 		if Position == "root":
 			Similarity = Weight
 		Data.append([Name, Weight, Position])
+	simPairs_2 = []
+	for item in simPairs:
+		if item and [item[1], item[0]] not in simPairs_2:
+			simPairs_2.append(item)
+
 	table = pandas.DataFrame(Data, columns=["None", "Weight", "Position"])
 	print(table)
+	print(simPairs_2)
 	print("Similarity : {0:.3f}".format(Similarity))

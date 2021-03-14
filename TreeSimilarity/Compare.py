@@ -6,11 +6,10 @@ embedding_path = "source/cn.skipgram.bin"
 # model = gensim.models.KeyedVectors.load_word2vec_format(embedding_path, binary=True, unicode_errors='ignore')
 model = Word2Vec.load("Model/FEA.model")
 
-print("Finished")
 
 
 def syn(node, node_list):  # 使用word2vec比较一个元组中两个词的相似度
-
+	simPairs = []
 	pairs = []
 	i = 0
 	result = 0
@@ -20,7 +19,8 @@ def syn(node, node_list):  # 使用word2vec比较一个元组中两个词的相�
 		try:
 			sim = model.wv.similarity(pair[0], pair[1])
 			if 0.5 < sim < 0.99:
-				# print(pair[0],pair[1])
+
+				simPairs.append([pair[1], pair[0]])
 				result += sim
 				i += 1
 			else:
@@ -28,9 +28,9 @@ def syn(node, node_list):  # 使用word2vec比较一个元组中两个词的相�
 		except KeyError:
 			continue
 	if i == 0:
-		return result
+		return result, 0
 	else:
-		return result / i
+		return result / i, simPairs
 
 
 if __name__ == '__main__':
