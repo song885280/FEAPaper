@@ -6,7 +6,7 @@
 
 import sys
 import json
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog
 from mainWindow import *
 from MaterialView import Material
 
@@ -23,6 +23,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 	def __init__(self, parent=None):
 		super(MyWindow, self).__init__(parent)
 		self.setupUi(self)
+		self.readFiles.clicked.connect(self.showDialog1)
 		self.Create.clicked.connect(self.createBtn)
 		self.Reset.clicked.connect(self.initTable)
 		self.Reset.clicked.connect(self.clearText)
@@ -125,6 +126,22 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 		"""
 		row_cnt = self.MaterialTable.rowCount()
 		self.MaterialTable.removeRow(row_cnt - 1)
+
+	def showDialog1(self):
+		fileName = QFileDialog.getOpenFileName(self, 'Open file', '.')
+		print(fileName[0])
+		with open(fileName[0],encoding="utf-8") as File:
+			case = json.loads(File.readline())  # 读取文件内容转换为json
+			print(case)
+			# self.Usage.clear()
+			# self.Standard.clear()
+			# self.analyseType.clear()
+			# self.ProductPara.clear()
+			# self.EnviPara.clear()
+			# self.Condition.clear()
+			# self.Load.clear()
+			# self.Position.clear()
+
 
 
 def Separate(Text):

@@ -204,6 +204,35 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QComboBox" name="analyseObject">
+              <item>
+               <property name="text">
+                <string>储运容器</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>传热容器</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>反应容器</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>分离容器</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>容器部件</string>
+               </property>
+              </item>
+             </widget>
+            </item>
            </layout>
           </widget>
          </item>
@@ -240,42 +269,6 @@
             <enum>QFrame::Raised</enum>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_7">
-            <item>
-             <widget class="QLabel" name="label_7">
-              <property name="text">
-               <string>分析类型：</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="analyseObject">
-              <item>
-               <property name="text">
-                <string>储运容器</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>传热容器</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>反应容器</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>分离容器</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>容器部件</string>
-               </property>
-              </item>
-             </widget>
-            </item>
             <item>
              <widget class="QLabel" name="label_8">
               <property name="text">
@@ -710,10 +703,38 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_7"/>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <item>
+          <widget class="QPushButton" name="Reset">
+           <property name="text">
+            <string>重置</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_5"/>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="QPushButton" name="Create">
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>阿里巴巴普惠体</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>生成</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <spacer name="verticalSpacer">
@@ -731,32 +752,9 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QPushButton" name="Reset">
+          <widget class="QPushButton" name="readFiles">
            <property name="text">
-            <string>重置</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_6">
-         <item>
-          <widget class="QPushButton" name="Create">
-           <property name="minimumSize">
-            <size>
-             <width>30</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>阿里巴巴普惠体</family>
-             <pointsize>14</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>生成</string>
+            <string>读取</string>
            </property>
           </widget>
          </item>
