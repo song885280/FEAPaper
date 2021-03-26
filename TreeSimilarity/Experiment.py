@@ -62,7 +62,7 @@ def innerType(TypeName):
 	:param TypeName: 类别名
 	"""
 	All_data = []
-	file_list = GetFileList(TypeName)
+	file_list = GetFileList("src/"+TypeName)
 	for i in tqdm(range(0, len(file_list))):
 		for j in range(i + 1, len(file_list)):
 			case_1 = file_list[i]
@@ -88,8 +88,8 @@ def TypeSide(TypeA, TypeB):
 	All_data = []
 	FolderA = TypeA
 	FolderB = TypeB
-	file_listA = GetFileList("src/" + FolderA)
-	file_listB = GetFileList("src/" + FolderB)
+	file_listA = GetFileList("src/usage/" + FolderA)
+	file_listB = GetFileList("src/usage/" + FolderB)
 	for i in tqdm(range(0, len(file_listA))):
 		for j in range(0, len(file_listB)):
 			case_1 = file_listA[i]
@@ -101,7 +101,7 @@ def TypeSide(TypeA, TypeB):
 			All_data.append([case_1, case_2, sim_w2v, simPairs, sim, sim_vsm])
 
 	result = pandas.DataFrame(All_data, columns=["案例1", "案例2", "sim_w2v", "simPairs", "sim", "sim_vsm"])
-	result.to_csv("results/" + FolderA + "_" + FolderB + "_results.csv", encoding="gbk")
+	result.to_csv("results/usage/" + FolderA + "_" + FolderB + "_results.csv", encoding="gbk")
 
 
 def TypeEX():
@@ -109,7 +109,7 @@ def TypeEX():
 	比较类别之间的相似度
 	:rtype: object
 	"""
-	FoldersA = ["储罐", "塔釜", "反应器", "管道", "零部件"]
+	FoldersA = ["传热容器", "储运容器", "分离容器", "反应容器", "容器部件"]
 	FoldersB = ["疲劳分析", "应力分析", "热分析", "结构分析"]
 
 	for i in FoldersA:
@@ -117,12 +117,13 @@ def TypeEX():
 			if i != j:
 				TypeSide(i, j)
 
-	for i in FoldersB:
-		for j in FoldersB:
-			if i != j:
-				TypeSide(i, j)
+	# for i in FoldersB:
+	# 	for j in FoldersB:
+	# 		if i != j:
+	# 			TypeSide(i, j)
 
 
 if __name__ == '__main__':
-	innerType("json")
+	# TypeEX()
+	innerType("ALL")
 	print("Finished")

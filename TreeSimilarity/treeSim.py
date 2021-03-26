@@ -29,7 +29,11 @@ class Tree:
             for j in range(0, len(self.nodes[i])):
                 node_name = self.nodes[i][j]
                 level.append(node_name)
-                self.AllNodes[node_name] = {"Level": i}
+                try:
+                    self.AllNodes[node_name] = {"Level": i}
+                except TypeError:
+                    print(tree_data)
+
             self.Levels[i] = level
 
         for i in range(0, len(self.relations)):
@@ -57,8 +61,10 @@ class Tree:
 class Node:
 
     def __init__(self, Tree, node_name):
+
         self.Parents = Tree.AllNodes[node_name]["Parents"]
         self.Children = Tree.AllNodes[node_name]["Children"]
+
         self.Concept = node_name
         self.Position = None
         self.L = 0
