@@ -9,7 +9,7 @@ import math
 import os
 import pandas
 from tqdm import tqdm
-
+from HumanJudge import SimCaculater
 import treeSim as ts
 
 All_simPairs = []
@@ -71,11 +71,12 @@ def innerType(TypeName):
 			sim = Comp(file_list[i], file_list[j], "0")[1]
 			simPairs = Comp(file_list[i], file_list[j], "1")[2]
 			sim_vsm = VSM.VSIm(case_1, case_2)
-			All_data.append([case_1, case_2, sim_w2v, simPairs, sim, sim_vsm])
+			sim_Human = SimCaculater(case_1,case_2)
+			All_data.append([case_1, case_2, sim_w2v, simPairs, sim, sim_vsm,sim_Human])
 			All_simPairs.extend(simPairs)
 	simPairsTable = pandas.DataFrame(All_simPairs, columns=["1", "2"])
-	simPairsTable.to_csv("关键词对", encoding="gbk")
-	result = pandas.DataFrame(All_data, columns=["案例1", "案例2", "sim_w2v", "simPairs", "sim", "sim_vsm"])
+	simPairsTable.to_csv("关键词对.csv", encoding="gbk")
+	result = pandas.DataFrame(All_data, columns=["案例1", "案例2", "sim_w2v", "simPairs", "sim_original", "sim_vsm","sim_Human"])
 	result.to_csv("results/" + TypeName + "_results.csv", encoding="gbk")
 
 
