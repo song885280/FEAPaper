@@ -62,7 +62,7 @@ def SimCaculater(FileA, FileB):
     # print("设计相似度：{0:.2f}".format(DesignSim))
     # print("计算相似度：{0:.2f}".format(CaculateSim))
     # print("案例相似度：{0:.2f}".format(Similarity))
-    return "{0:.1f}".format(Similarity)
+    return Similarity
 
 
 class BuildCase:

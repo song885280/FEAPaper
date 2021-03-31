@@ -90,7 +90,7 @@ class Node:
 
 class MultiTree(Tree):
 
-    def __init__(self, Tree_1: object, Tree_2: object, alpha: int, Method) -> object:
+    def __init__(self, Tree_1: object, Tree_2: object, alpha: int, Method, PSO, Plist) -> object:
         """
 
         :param Tree_1: 树1
@@ -101,6 +101,8 @@ class MultiTree(Tree):
         self.Tree_1 = Tree_1
         self.Tree_2 = Tree_2
         self.Method = Method
+        self.PSO = PSO
+        self.Plist = Plist
         self.simPairs = []
         Nodes = merge(self.Tree_1.nodes, self.Tree_2.nodes)
         Relations = merge_relations(self.Tree_1.all_Relations, self.Tree_2.all_Relations)
@@ -133,6 +135,8 @@ class MultiNode(Node, MultiTree):
     def __init__(self, MultiTree, node_name):
         alpha = MultiTree.alpha
         Method = MultiTree.Method
+        PSO = MultiTree.PSO
+        Plist = MultiTree.Plist
         node = Node(MultiTree, node_name)
         self.Position = node.Position
         self.Weight = 0
@@ -152,9 +156,14 @@ class MultiNode(Node, MultiTree):
         if self.Position == "root":
             beta = len(node.Children)
             Sum = 0
-            for Item in node.Children:
-                Sum += MultiNode(MultiTree, Item).Weight
-
+            if PSO == "False":
+                for Item in node.Children:
+                    Sum += MultiNode(MultiTree, Item).Weight  # 不考虑传播率
+            else:
+                count = 0
+                for Item in node.Children:
+                    Sum += Plist[0] * MultiNode(MultiTree, Item).Weight  # 考虑传播率
+                    count += 1
             self.Weight = Sum / beta
 
         if self.Position == "branch":
@@ -172,6 +181,13 @@ class MultiNode(Node, MultiTree):
             row = Sum / beta
 
             self.Weight = (1 - 1 / (alpha ** node.L)) * row + (1 / (alpha ** node.L)) * delta
+
+
+def getP(NodeName):
+    """
+    获取不同节点的边传播率
+    :param NodeName: 节点名
+    """
 
 
 def merge(a, b):
@@ -210,10 +226,10 @@ def get_vectors(nodes: list) -> object:
 
 if __name__ == '__main__':
 
-    Tree_1 = bulid_tree("json/蒸汽回转干燥机支撑系统_疲劳分析.json")
-    Tree_2 = bulid_tree("json/吸附器KJT20S.10000_疲劳强度分析.json")
+    Tree_1 = bulid_tree("src/ALL/中心大开孔储罐_稳定性分析.json")
+    Tree_2 = bulid_tree("src/ALL/偏心大开孔储罐_强度分析.json")
 
-    multi = MultiTree(Tree_1, Tree_2, math.e, "1")
+    multi = MultiTree(Tree_1, Tree_2, math.e, Method="1", PSO="True", Plist=[1.2, 1, 1, 1, 1])
     simPairs = multi.simPairs
     Data = []
     Similarity = 0
