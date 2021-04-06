@@ -120,7 +120,7 @@ def Test_PSO(Path):
             All_data.append([case_1.strip("src/ALL\\"), case_2.strip("src/ALL\\"), sim, sim_PSO, sim_vsm, sim_Human])
 
     result = pandas.DataFrame(All_data[299:],
-                              columns=["案例1", "案例2", "sim", "sim_PSO", "sim_VSM", "sim_Human"])
+                              columns=["案例1", "案例2", "sim_Original", "sim_PSO", "sim_VSM", "sim_Human"])
     result.to_csv("results/" + Path + "_PSO.csv", encoding="gbk")
 
 

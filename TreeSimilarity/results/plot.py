@@ -27,6 +27,8 @@ class Result:
         self.VSM_Delta = 0
         self.PSO_Theta = 0
         self.VSM_Theta = 0
+        self.Original_Delta = 0
+        self.Original_Theta = 0
 
     def AvrDelta(self, Mod):
         """
@@ -37,8 +39,8 @@ class Result:
         index = "sim_" + Mod
         AllDelta = 0
         for i in range(0, self.length):
-            Sim_1 = self.Data.loc[test.length][index]
-            Sim_2 = self.Data.loc[test.length]["sim_Human"]
+            Sim_1 = self.Data.loc[i][index]
+            Sim_2 = self.Data.loc[i]["sim_Human"]
             AllDelta += Delta(Sim_1, Sim_2)
         return AllDelta / self.length
 
@@ -52,8 +54,8 @@ class Result:
         index = "sim_" + Mod
         AllTheta = 0
         for i in range(0, self.length):
-            Sim_1 = self.Data.loc[test.length][index]
-            Sim_2 = self.Data.loc[test.length]["sim_Human"]
+            Sim_1 = self.Data.loc[i][index]
+            Sim_2 = self.Data.loc[i]["sim_Human"]
             AllTheta += pow(Delta(Sim_1, Sim_2) - avrDelta, 2)
         return AllTheta / self.length
 
@@ -62,5 +64,11 @@ test = Result("ALL_PSO.csv")
 
 test.PSO_Delta = test.AvrDelta("PSO")
 test.PSO_Theta = test.GetTheta(test.PSO_Delta, "PSO")
+test.VSM_Delta = test.AvrDelta("VSM")
+test.VSM_Theta = test.GetTheta(test.VSM_Delta, "VSM")
+test.Original_Delta = test.AvrDelta("Original")
+test.Original_Theta = test.GetTheta(test.Original_Delta, "Original")
 
 print(test.PSO_Delta, test.PSO_Theta)
+print(test.VSM_Delta, test.VSM_Theta)
+print(test.Original_Delta, test.Original_Theta)
