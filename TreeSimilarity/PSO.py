@@ -43,7 +43,6 @@ def MultiTree(case_1, case_2, PSO, Plist):
     return Similarity
 
 
-
 def get_fitness(x, Population):
     """
     获取fitness
@@ -59,10 +58,10 @@ def get_fitness(x, Population):
                                   TestCouples[i][1],
                                   PSO="True",
                                   Plist=x[i])
-        Sims_MultiTree.append(pow(10, Sim_MultiTree))
+        Sims_MultiTree.append(pow(100, Sim_MultiTree))
         Sim_Human = SimCaculater(TestCouples[i][0],
                                  TestCouples[i][1])
-        Sims_Human.append((pow(10, Sim_Human)))
+        Sims_Human.append((pow(100, Sim_Human)))
     return np.abs(np.array(Sims_MultiTree) - np.array(Sims_Human))
 
 
@@ -113,16 +112,18 @@ class PSO(object):
         for i in range(self.max_step):
             plt.clf()
             plt.scatter(self.x[:, 0], self.x[:, 1], s=30, color='r')
-            plt.xlim(self.solving_range[0], self.solving_range[1])
-            plt.ylim(self.solving_range[0], self.solving_range[1])
-            plt.pause(0.01)
+            plt.xlim(-5, 5)
+            plt.ylim(-5, 5)
+            plt.pause(0.1)
             self.update()
             plt.show()
-        print(list(self.pg))
+
+        print("本次计算最优解为：", list(self.pg))
         Sim_PSO = MultiTree("src/ALL/大型氧化反应器_模态分析.json",
                             "src/ALL/大型精制反应器_模态分析.json",
                             PSO="True",
                             Plist=self.pg)
+
         Sim_Multitree = MultiTree("src/ALL/大型氧化反应器_模态分析.json",
                                   "src/ALL/大型精制反应器_模态分析.json",
                                   PSO="False",
@@ -136,7 +137,7 @@ class PSO(object):
 
 if __name__ == '__main__':
     pso = PSO(population=300,
-              max_step=50,
+              max_step=100,
               solving_range=[0.80, 1.2],
               learning_rate=2,
               bia=0.6,
@@ -145,3 +146,6 @@ if __name__ == '__main__':
 
 # if __name__ == '__main__':
 #     GetTestCouples("src/ALL")
+# [1.0815271979006698, 2.8151620763332366, 1.3357623474818106, 1.4472123480459873, 1.608078508787306]
+# max_step=100 high_accuracy
+# 

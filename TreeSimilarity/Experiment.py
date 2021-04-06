@@ -90,36 +90,38 @@ def Test(TypeName):
             simPairs = Comp(file_list[i], file_list[j], "1")[2]
             sim_vsm = VSM.VSIm(case_1, case_2)
             sim_Human = SimCaculater(case_1, case_2)
-            All_data.append([case_1, case_2, sim_w2v, simPairs, sim, sim_vsm, sim_Human])
+            All_data.append(
+                [case_1.strip("src/ALL"), case_2.strip("src/ALL"), sim_w2v, simPairs, sim, sim_vsm, sim_Human])
             All_simPairs.extend(simPairs)
     simPairsTable = pandas.DataFrame(All_simPairs, columns=["1", "2"])
     simPairsTable.to_csv("关键词对.csv", encoding="gbk")
     result = pandas.DataFrame(All_data,
                               columns=["案例1", "案例2", "sim_w2v", "simPairs", "sim_original", "sim_vsm", "sim_Human"])
-    result.to_csv("results/" + TypeName + "_results.csv", encoding="gbk")
+    result.to_csv("results/" + TypeName + "_W2V.csv", encoding="gbk")
 
 
-def Test_PSO(TypeName):
+def Test_PSO(Path):
     """
-	比较同类案例的平均相似度
-	:param TypeName: 类别名
+	使用PSO比较同类案例的平均相似度
+	:param Path: 类别名
 	"""
     All_data = []
-    file_list = GetFileList("src/" + TypeName)
-    for i in tqdm(range(300, len(file_list))):
+    file_list = GetFileList("src/" + Path)
+    for i in tqdm(range(0, len(file_list))):
         for j in range(i + 1, len(file_list)):
             case_1 = file_list[i]
             case_2 = file_list[j]
             sim = Comp(file_list[i], file_list[j], "0")[1]
-            sim_PSO = Comp_PSO(file_list[i], file_list[j],Plist=[1.0852946533803878, 1.2934047995434308, 1.0049731914104083, 1.18243281356208, 1.1480749415028073])
+            sim_PSO = Comp_PSO(file_list[i], file_list[j],
+                               Plist=[1.0815271979006698, 2.8151620763332366, 1.3357623474818106, 1.4472123480459873,
+                                      1.608078508787306])
+            sim_vsm = VSM.VSIm(case_1, case_2)
             sim_Human = SimCaculater(case_1, case_2)
-            All_data.append([case_1, case_2, sim, sim_PSO, sim_Human])
+            All_data.append([case_1.strip("src/ALL\\"), case_2.strip("src/ALL\\"), sim, sim_PSO, sim_vsm, sim_Human])
 
-    simPairsTable = pandas.DataFrame(All_simPairs, columns=["1", "2"])
-    simPairsTable.to_csv("关键词对.csv", encoding="gbk")
-    result = pandas.DataFrame(All_data,
-                              columns=["案例1", "案例2", "sim", "simPSO", "sim_Human"])
-    result.to_csv("results/" + TypeName + "_PSOresults.csv", encoding="gbk")
+    result = pandas.DataFrame(All_data[299:],
+                              columns=["案例1", "案例2", "sim", "sim_PSO", "sim_VSM", "sim_Human"])
+    result.to_csv("results/" + Path + "_PSO.csv", encoding="gbk")
 
 
 def TypeSide(TypeA, TypeB):
@@ -141,7 +143,7 @@ def TypeSide(TypeA, TypeB):
             sim = Comp(case_1, case_2, "0")[1]
             simPairs = Comp(case_1, case_2, "1")[2]
             sim_vsm = VSM.VSIm(case_1, case_2)
-            All_data.append([case_1, case_2, sim_w2v, simPairs, sim, sim_vsm])
+            All_data.append([case_1.strip("src/ALL\\"), case_2.strip("src/ALL\\"), sim_w2v, simPairs, sim, sim_vsm])
 
     result = pandas.DataFrame(All_data, columns=["案例1", "案例2", "sim_w2v", "simPairs", "sim", "sim_vsm"])
     result.to_csv("results/usage/" + FolderA + "_" + FolderB + "_results.csv", encoding="gbk")
