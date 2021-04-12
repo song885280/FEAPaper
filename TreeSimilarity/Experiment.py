@@ -42,11 +42,11 @@ def Comp_PSO(case_1, case_2, Plist):
 
 def Comp(case_1, case_2, mod):
     """
-	比较两个案例之间的相似度
-	:param mod: 比较方式
-	:param case_1: 案例1的名称
-	:param case_2: 案例2的名称
-	"""
+    比较两个案例之间的相似度
+    :param mod: 比较方式
+    :param case_1: 案例1的名称
+    :param case_2: 案例2的名称
+    """
     Tree_1 = ts.bulid_tree(case_1)
     Tree_2 = ts.bulid_tree(case_2)
 
@@ -76,9 +76,9 @@ def Comp(case_1, case_2, mod):
 
 def Test(TypeName):
     """
-	比较同类案例的平均相似度
-	:param TypeName: 类别名
-	"""
+    比较同类案例的平均相似度
+    :param TypeName: 类别名
+    """
     All_data = []
     file_list = GetFileList("src/" + TypeName)
     for i in tqdm(range(0, len(file_list))):
@@ -91,20 +91,20 @@ def Test(TypeName):
             sim_vsm = VSM.VSIm(case_1, case_2)
             sim_Human = SimCaculater(case_1, case_2)
             All_data.append(
-                [case_1.strip("src/ALL"), case_2.strip("src/ALL"), sim_w2v, simPairs, sim, sim_vsm, sim_Human])
+                [case_1.strip("src/ALL"), case_2.strip("src/ALL"), sim_w2v, sim, sim_vsm, sim_Human])
             All_simPairs.extend(simPairs)
     simPairsTable = pandas.DataFrame(All_simPairs, columns=["1", "2"])
     simPairsTable.to_csv("关键词对.csv", encoding="gbk")
     result = pandas.DataFrame(All_data,
-                              columns=["案例1", "案例2", "sim_w2v", "simPairs", "sim_original", "sim_vsm", "sim_Human"])
+                              columns=["案例1", "案例2", "sim_w2v", "sim_original", "sim_vsm", "sim_Human"])
     result.to_csv("results/" + TypeName + "_W2V.csv", encoding="gbk")
 
 
 def Test_PSO(Path):
     """
-	使用PSO比较同类案例的平均相似度
-	:param Path: 类别名
-	"""
+    使用PSO比较同类案例的平均相似度
+    :param Path: 类别名
+    """
     All_data = []
     file_list = GetFileList("src/" + Path)
     for i in tqdm(range(0, len(file_list))):
@@ -126,10 +126,10 @@ def Test_PSO(Path):
 
 def TypeSide(TypeA, TypeB):
     """
-	比较不同类型的案例之间的相似度
-	:param TypeA:
-	:param TypeB:
-	"""
+    比较不同类型的案例之间的相似度
+    :param TypeA:
+    :param TypeB:
+    """
     All_data = []
     FolderA = TypeA
     FolderB = TypeB
@@ -151,9 +151,9 @@ def TypeSide(TypeA, TypeB):
 
 def TypeEX():
     """
-	比较类别之间的相似度
-	:rtype: object
-	"""
+    比较类别之间的相似度
+    :rtype: object
+    """
     FoldersA = ["传热容器", "储运容器", "分离容器", "反应容器", "容器部件"]
     FoldersB = ["疲劳分析", "应力分析", "热分析", "结构分析"]
 
@@ -171,6 +171,6 @@ def TypeEX():
 
 if __name__ == '__main__':
     # TypeEX()
-    # Test("ALL")
-    Test_PSO("ALL")
+    Test("ALL")
+    # Test_PSO("ALL")
     print("Finished")

@@ -122,12 +122,9 @@ class MultiTree(Tree):
             else:
                 self.Weight_dict[node] = 0
 
-
-"""
-		print("节点权重")
-		for nodes in self.Weight_dict:
-			print(nodes, self.Weight_dict[nodes])
-"""
+        # print("节点权重")
+        # for nodes in self.Weight_dict:
+        #     print(nodes, self.Weight_dict[nodes])
 
 
 class MultiNode(Node, MultiTree):
@@ -183,13 +180,6 @@ class MultiNode(Node, MultiTree):
             self.Weight = (1 - 1 / (alpha ** node.L)) * row + (1 / (alpha ** node.L)) * delta
 
 
-def getP(NodeName):
-    """
-    获取不同节点的边传播率
-    :param NodeName: 节点名
-    """
-
-
 def merge(a, b):
     c = []
     for i in range(0, len(a)):
@@ -202,6 +192,12 @@ def merge(a, b):
 
 
 def merge_relations(a, b):
+    """
+    合并不同FEA案例树中的关系
+    :param a: TreeA中的关系
+    :param b: TreeB中的关系
+    :return: 去重之后关系的集合
+    """
     c = []
     for item in a:
         if item not in b:
@@ -226,10 +222,10 @@ def get_vectors(nodes: list) -> object:
 
 if __name__ == '__main__':
 
-    Tree_1 = bulid_tree("src/ALL/中心大开孔储罐_稳定性分析.json")
-    Tree_2 = bulid_tree("src/ALL/偏心大开孔储罐_强度分析.json")
+    Tree_1 = bulid_tree("src/ALL/LNG低温卧式储罐_强度分析.json")
+    Tree_2 = bulid_tree("src/ALL/大型氧化反应器_模态分析.json")
 
-    multi = MultiTree(Tree_1, Tree_2, math.e, Method="1", PSO="True", Plist=[1.2, 1, 1, 1, 1])
+    multi = MultiTree(Tree_1, Tree_2, math.e, Method="0", PSO="False", Plist=[1.2, 1, 1, 1, 1])
     simPairs = multi.simPairs
     Data = []
     Similarity = 0
