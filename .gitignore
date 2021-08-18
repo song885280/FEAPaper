@@ -1,6 +1,5 @@
 
 *.json
-/W2V/Data/
 *.xlsx
 *.docx
 *.csv
