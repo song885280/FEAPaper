@@ -9,7 +9,6 @@
 import json
 from VSM import booleanW, cosDis
 
-
 def getCaseInfo(jsonFile):
     """
     json文件读取
@@ -32,7 +31,6 @@ def clearList(listA):
 
 def compare(listA, listB):
     """
-
     :param listA: 列表1
     :param listB: 列表2
     :return: 列表1和2的VSM相似度
@@ -45,17 +43,15 @@ def compare(listA, listB):
 
 
 def SimCaculater(FileA, FileB):
-
     CaseA = BuildCase(FileA)
     CaseB = BuildCase(FileB)
     ProductSim = 0.3 * compare(CaseA.ProductInfo, CaseB.ProductInfo)  # 产品
     AnalyseSim = 0.4 * compare(CaseA.AnalyseType, CaseB.AnalyseType)  # 分析类型
-    PropertyTypeSim = 0.05 * compare(CaseA.PropertyType, CaseB.PropertyType)  # 材料类型
-    PropertyInfoSim = 0.05 * compare(CaseA.ProductInfo, CaseB.ProductInfo)  # 材料信息
-    DesignSim = 0.1 * compare(CaseA.DesignPara, CaseB.DesignPara)  # 设计参数
-    CaculateSim = 0.1 * compare(CaseA.CaculatePara, CaseB.CaculatePara)  # 计算参数
+    PropertyTypeSim = 0.05 * compare(CaseA.PropertyType, CaseB.PropertyType)  # 材料牌号
+    PropertyInfoSim = 0.05 * compare(CaseA.ProductInfo, CaseB.ProductInfo)  # 材料属性
+    DesignSim = 0.2 * compare(CaseA.DesignPara, CaseB.DesignPara)  # 设计参数
 
-    Similarity = 0.5 * (ProductSim + AnalyseSim + PropertyTypeSim + PropertyInfoSim + DesignSim + CaculateSim) + 0.5
+    Similarity = 0.55 * (ProductSim + AnalyseSim + PropertyTypeSim + PropertyInfoSim + DesignSim ) + 0.45
     # print("产品相似度：{0:.2f}".format(ProductSim))
     # print("分析相似度：{0:.2f}".format(AnalyseSim))
     # print("材料相似度：{0:.2f}".format(PropertyTypeSim + PropertyInfoSim))
@@ -64,31 +60,50 @@ def SimCaculater(FileA, FileB):
     # print("案例相似度：{0:.2f}".format(Similarity))
     return Similarity
 
-
 class BuildCase:
+    '''
+    计算中文案例
+    '''
     def __init__(self, jsonFile):
         Case = getCaseInfo(jsonFile)["分析案例"][0]
+        self.ProductInfo = Case["产品信息"][0]["设备名称"] + \
+                           Case["产品信息"][0]["部件名称"] + \
+                           Case["产品信息"][0]["设计要求"]
 
-        self.ProductInfo = Case["产品信息"][0]["名称"] + \
-                           Case["产品信息"][0]["关键词"] + \
-                           Case["产品信息"][0]["标准"]
+        self.AnalyseType = Case["目的信息"]
 
-        self.AnalyseType = Case["分析类型"]
-
-        self.PropertyType = list(Case["材料属性"][0].keys())
+        self.PropertyType = list(Case["材料信息"][0].keys())
 
         self.PropertyInfo = []
         for i in self.PropertyType:
-            self.PropertyInfo += Case["材料属性"][0][i]
+            self.PropertyInfo += Case["材料信息"][0][i]
         self.PropertyInfo = clearList(self.PropertyInfo)
 
-        self.DesignPara = Case["设计参数"][0]["产品参数"] + Case["设计参数"][0]["环境参数"]
+        self.DesignPara = Case["工况"][0]["设计工况"] + Case["工况"][0]["工作工况"]
+#
+# class BuildCase:
+#     '''
+#     计算英文案例
+#     '''
+#     def __init__(self, jsonFile):
+#         Case = getCaseInfo(jsonFile)["FEA task"][0]
+#         self.ProductInfo = Case["Product information"][0]["Equipment name"] + \
+#                            Case["Product information"][0]["Part name"] + \
+#                            Case["Product information"][0]["Design requirement"]
+#
+#         self.AnalyseType = Case["Analysis aim"]
+#         self.PropertyType = list(Case["Material and physical data"][0].keys())
+#         self.PropertyInfo = []
+#         for i in self.PropertyType:
+#             self.PropertyInfo += Case["Material and physical data"][0][i]
+#         self.PropertyInfo = clearList(self.PropertyInfo)
+#
+#         self.DesignPara = Case["Working condition"][0]["Design condition"] + Case["Working condition"][0]["Operation " \
+#                                                                                                           "condition"]
 
-        self.CaculatePara = Case["计算参数"][0]["部件"] + \
-                            Case["计算参数"][0]["工况"] + \
-                            Case["计算参数"][0]["载荷"]
 
+
+# 测试代码
 # a = BuildCase("src/ALL/LNG低温卧式储罐_强度分析.json")
 # b = BuildCase("src/ALL/LNG储罐主容器_热分析.json")
-#
-# SimCaculater("src/ALL/LNG低温卧式储罐_强度分析.json","src/ALL/LNG储罐主容器_热分析.json")
+## SimCaculater("src/ALL/LNG低温卧式储罐_强度分析.json","src/ALL/LNG储罐主容器_热分析.json")

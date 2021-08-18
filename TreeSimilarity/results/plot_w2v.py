@@ -11,7 +11,9 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import ticker
+
 plt.rc('font', family='Times New Roman')
+
 
 def Delta(Sim_1, Sim_2):
     return abs((Sim_1 - Sim_2) / Sim_2)
@@ -32,6 +34,8 @@ class Result:
         self.VSM_Theta = 0
         self.Original_Delta = 0
         self.Original_Theta = 0
+        self.BERT_Delta = 0
+        self.BERT_Theta = 0
 
     def AvrDelta(self, Mod):
         """
@@ -63,29 +67,33 @@ class Result:
         return AllTheta / self.length
 
 
-W2V = Result("ALL_W2V.csv")
+W2V = Result("0425_en_W2V.csv")
 
-W2V.W2V_Delta = W2V.AvrDelta("W2V")
-W2V.W2V_Theta = W2V.GetTheta(W2V.W2V_Delta, "W2V")
-W2V.VSM_Delta = W2V.AvrDelta("VSM")
-W2V.VSM_Theta = W2V.GetTheta(W2V.VSM_Delta, "VSM")
-W2V.Original_Delta = W2V.AvrDelta("Original")
-W2V.Original_Theta = W2V.GetTheta(W2V.Original_Delta, "Original")
+W2V.W2V_Delta = W2V.AvrDelta("w2v")
+W2V.W2V_Theta = W2V.GetTheta(W2V.W2V_Delta, "w2v")
+W2V.VSM_Delta = W2V.AvrDelta("vsm")
+W2V.VSM_Theta = W2V.GetTheta(W2V.VSM_Delta, "vsm")
+W2V.Original_Delta = W2V.AvrDelta("original")
+W2V.Original_Theta = W2V.GetTheta(W2V.Original_Delta, "original")
+W2V.BERT_Delta = W2V.AvrDelta("BERT")
+W2V.BERT_Theta = W2V.GetTheta(W2V.BERT_Delta, "BERT")
 
-print(W2V.W2V_Delta, W2V.W2V_Theta)
-print(W2V.VSM_Delta, W2V.VSM_Theta)
-print(W2V.Original_Delta, W2V.Original_Theta)
+print("W2V:", W2V.W2V_Delta, W2V.W2V_Theta)
+print("MultiTree:", W2V.Original_Delta, W2V.Original_Theta)
+print("VSM:", W2V.VSM_Delta, W2V.VSM_Theta)
+print("BERT:", W2V.BERT_Delta, W2V.BERT_Theta)
 
 fig = plt.gca()
-Mods = ["W2V+MultiTree", "MultiTree", "VSM"]
-Delta = [W2V.W2V_Delta, W2V.Original_Delta, W2V.VSM_Delta]
-Theta = [W2V.W2V_Theta, W2V.Original_Theta, W2V.VSM_Theta]
+Mods = ["word2vec+multi-tree", "multi-tree", "VSM", "SBERT"]
+Delta = [W2V.W2V_Delta, W2V.Original_Delta, W2V.VSM_Delta, W2V.BERT_Delta]
+Theta = [W2V.W2V_Theta, W2V.Original_Theta, W2V.VSM_Theta, W2V.BERT_Theta]
 
 plt.bar(Mods, Delta, yerr=Theta, width=0.45, error_kw={'ecolor': '0.2', 'capsize': 5, "capthick": 1}, alpha=0.7)
 plt.xticks(fontsize=13)  # 更改字体大小
 plt.yticks(fontsize=13)
+plt.ylim(0, 0.25)
 fig.yaxis.set_major_formatter(ticker.PercentFormatter(xmax=1, decimals=1))  # 将y轴转换为百分比
-plt.ylabel('Average error',fontsize=13)
+plt.ylabel('Average error', fontsize=13)
 # plt.title('Error compared with human judgement',fontsize=15)
-plt.savefig("img/Error_analysis_w2v.svg")
+plt.savefig("img/Error_analysis_w2v_en.svg")
 plt.show()

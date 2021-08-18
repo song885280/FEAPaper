@@ -4,6 +4,7 @@
 # @File ：Experiment.py
 # @IDE ：PyCharm
 
+
 import VSM
 import math
 import os
@@ -13,7 +14,6 @@ from tqdm import tqdm
 from HumanJudge import SimCaculater
 import treeSim as ts
 
-
 All_simPairs = []
 
 def GetFileList(dir):
@@ -22,7 +22,6 @@ def GetFileList(dir):
         for file in files:
             file_list.append(os.path.join(root, file))
     return file_list
-
 
 def Comp_PSO(case_1, case_2, Plist):
     Tree_1 = ts.bulid_tree(case_1)
@@ -40,14 +39,12 @@ def Comp_PSO(case_1, case_2, Plist):
             Similarity = Weight
     return Similarity
 
-
 def Comp(case_1, case_2, mod):
     """
     比较两个案例之间的相似度
     :param mod: 比较方式
     :param case_1: 案例1的名称
     :param case_2: 案例2的名称
-    ts：treeSim
     """
     Tree_1 = ts.bulid_tree(case_1)
     Tree_2 = ts.bulid_tree(case_2)
@@ -91,7 +88,7 @@ def Test(TypeName):
     :param TypeName: 类别名
     """
     All_data = []
-    vectors = np.load("RelatedFiles/FEA案例数据_英文_sbert.npy")
+    vectors = np.load("RelatedFiles/FEA案例数据_中文_sbert.npy")
     file_list = GetFileList("src/" + TypeName)
     for i in tqdm(range(0, len(file_list))):
         for j in range(i + 1, len(file_list)):
@@ -184,6 +181,7 @@ def TypeEX():
 
 if __name__ == '__main__':
     # TypeEX()
-    Test("0425")
+    Test("0505FEAcaseSet_cn")
+    # Test("0425")
     # Test_PSO("ALL")
     print("Finished")

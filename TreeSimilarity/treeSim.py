@@ -3,7 +3,9 @@ import math
 import pandas
 from tqdm import tqdm
 
+
 import Compare
+
 import jsonParser
 
 
@@ -20,6 +22,7 @@ class Tree:
         self.Edges = {}  # 存放边和它对应的值
         self.all_Relations = []
         self.Levels = {}  # 存放每个等级的所有节点
+
 
         for j in range(0, len(self.relations)):  # 存储所有关系
             self.all_Relations.append(self.relations[j])
@@ -56,7 +59,6 @@ class Tree:
                         children.append(pair[0])
             self.AllNodes[node_name]["Parents"] = parent
             self.AllNodes[node_name]["Children"] = children
-
 
 class Node:
 
@@ -159,7 +161,8 @@ class MultiNode(Node, MultiTree):
             else:
                 count = 0
                 for Item in node.Children:
-                    Sum += Plist[0] * MultiNode(MultiTree, Item).Weight  # 考虑传播率
+                    print(node.Children)
+                    Sum += Plist[count] * MultiNode(MultiTree, Item).Weight  # 考虑传播率
                     count += 1
             self.Weight = Sum / beta
 
@@ -207,6 +210,7 @@ def merge_relations(a, b):
 
 def bulid_tree(tree_name):
     tree_data = jsonParser.Converter(tree_name)
+
     return Tree(tree_data)
 
 
@@ -222,10 +226,11 @@ def get_vectors(nodes: list) -> object:
 
 if __name__ == '__main__':
 
-    Tree_1 = bulid_tree("src/ALL/LNG低温卧式储罐_强度分析.json")
-    Tree_2 = bulid_tree("src/ALL/大型氧化反应器_模态分析.json")
+    Tree_1 = bulid_tree("src/0425/1.json")
+    Tree_2 = bulid_tree("src/0425/2.json")
+    # Tree_2 = bulid_tree("src/new/C5-吸附塔.json")
 
-    multi = MultiTree(Tree_1, Tree_2, math.e, Method="0", PSO="False", Plist=[1.2, 1, 1, 1, 1])
+    multi = MultiTree(Tree_1, Tree_2, math.e, Method="1", PSO="True", Plist=[1, 1, 1, 1])
     simPairs = multi.simPairs
     Data = []
     Similarity = 0

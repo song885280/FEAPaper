@@ -18,7 +18,8 @@ dictPath = "Data/关键词.txt"
 sumPath = "Data/分行语料.txt"
 # sumPath = 'data/Clean/所有语料.txt'
 procPath = 'Data/分词语料.txt'
-modPath = 'Data/FEA.model'
+modPath1 = 'Data/FEA.model'
+modPath2 = 'Data/FEA.vector'
 
 
 def separate():
@@ -40,7 +41,6 @@ def separate():
         output_file.write(outputStr+'\n')
     print('分词程序执行结束！')
 
-
 if __name__ == "__main__":
     separate()
     '''
@@ -56,14 +56,15 @@ if __name__ == "__main__":
     print('开始转换...')
     start = time.process_time()
     model = Word2Vec(LineSentence(procPath),
-                     size=50,  # 词向量长度为400
-                     window=3,
-                     min_count=3,
-                     workers=multiprocessing.cpu_count(),
-                     iter=20,
-                     sg=0,
-                     hs=1)
+                     size = 500,  # 词向量长度为400  vector_size to size
+                     window = 3,
+                     min_count = 3,
+                     workers = multiprocessing.cpu_count(),
+                     iter = 20,  #epochs to iter
+                     sg = 0,
+                     hs = 1)
 
-    model.save(modPath)
+    model.save(modPath1)
+    model.wv.save_word2vec_format(modPath2)
     end = time.process_time()  # 计时模块
     print('模型已保存!\n转换用时: %s Seconds' % (end - start))

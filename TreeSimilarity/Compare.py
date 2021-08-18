@@ -1,10 +1,17 @@
+
+
 from gensim.models import Word2Vec
 import gensim
 
 print("Loading the w2v model...")
 embedding_path = "source/cn.skipgram.bin"
+
 # model = gensim.models.KeyedVectors.load_word2vec_format(embedding_path, binary=True, unicode_errors='ignore')
-model = Word2Vec.load("Model/FEA.model")
+# model = Word2Vec.wv.load("Model/FEA.model")
+# model = gensim.models.Word2Vec.load("Model/FEA.model")
+model = gensim.models.Word2Vec.load("G:\pythonProject\FEASimPaper\W2V\data\FEA.model")
+
+print('测试---ddd')
 
 
 def syn(node, node_list):
